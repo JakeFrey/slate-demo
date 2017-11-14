@@ -254,13 +254,12 @@ class App extends React.Component {
         }
         else {
             switch (event.key) {
-            case 'Backspace': return onBackspace(event, change)
-            case 'Delete': return onDelete(event, change)
-            case 'Enter': return onEnter(event, change)
+                case 'Backspace': return onBackspace(event, change)
+                case 'Delete': return onDelete(event, change)
+                case 'Enter': return onEnter(event, change)
             }
 
             let changesMade = false
-
             let mark = null
 
             if (isLatexHotkey(event)) {

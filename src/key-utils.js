@@ -81,6 +81,11 @@ export function onDelete(event, change) {
 export function onEnter(event, change) {
     const focusedNode = change.state.focusBlock
 
+    if () {
+        event.preventDefault()
+        return true
+    }
+
     // Codeblocks and choices
     if (focusedNode.type == 'codeblock' || focusedNode.type == 'choice' || 'instructions') {
 
