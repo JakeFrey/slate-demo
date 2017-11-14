@@ -1,0 +1,249 @@
+{
+    "document": {
+        "nodes": [
+            {
+                "kind": "block",
+                "type": "test",
+                "nodes": [
+                    {
+                        "kind": "block",
+                        "type": "question",
+                        "nodes": [
+                            {
+                                "kind": "block",
+                                "type": "instructions",
+                                "nodes": [
+                                    {
+                                        "kind": "block",
+                                        "type": "paragraph",
+                                        "nodes": [
+                                            {
+                                                "kind": "text",
+                                                "text": "Based on the table below, what is the capital of California?"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "kind": "block",
+                                        "type": "table",
+                                        "nodes": [
+                                            {
+                                                "kind": "block",
+                                                "type": "table-row",
+                                                "nodes": [
+                                                    {
+                                                        "kind": "block",
+                                                        "type": "table-cell",
+                                                        "nodes": [
+                                                            {
+                                                                "kind": "text",
+                                                                "leaves": [
+                                                                    {
+                                                                        "text": "State"
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    },
+                                                    {
+                                                        "kind": "block",
+                                                        "type": "table-cell",
+                                                        "nodes": [
+                                                            {
+                                                                "kind": "text",
+                                                                "leaves": [
+                                                                    {
+                                                                        "text": "Capital",
+                                                                        "marks": [
+                                                                            {
+                                                                                "type": "bold"
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "kind": "block",
+                                                "type": "table-row",
+                                                "nodes": [
+                                                    {
+                                                        "kind": "block",
+                                                        "type": "table-cell",
+                                                        "nodes": [
+                                                            {
+                                                                "kind": "text",
+                                                                "leaves": [
+                                                                    {
+                                                                        "text": "Texas",
+                                                                        "marks": [
+                                                                            {
+                                                                                "type": "bold"
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    },
+                                                    {
+                                                        "kind": "block",
+                                                        "type": "table-cell",
+                                                        "nodes": [
+                                                            {
+                                                                "kind": "text",
+                                                                "leaves": [
+                                                                    {
+                                                                        "text": "Austin"
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "kind": "block",
+                                                "type": "table-row",
+                                                "nodes": [
+                                                    {
+                                                        "kind": "block",
+                                                        "type": "table-cell",
+                                                        "nodes": [
+                                                            {
+                                                                "kind": "text",
+                                                                "leaves": [
+                                                                    {
+                                                                        "text": "California",
+                                                                        "marks": [
+                                                                            {
+                                                                                "type": "bold"
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    },
+                                                    {
+                                                        "kind": "block",
+                                                        "type": "table-cell",
+                                                        "nodes": [
+                                                            {
+                                                                "kind": "text",
+                                                                "leaves": [
+                                                                    {
+                                                                        "text": "Sacramento"
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "kind": "block",
+                                "type": "choices",
+                                "nodes": [
+                                    {
+                                        "kind": "block",
+                                        "type": "choice",
+                                        "nodes": [
+                                            {
+                                                "kind": "text",
+                                                "leaves": [
+                                                    {
+                                                        "kind": "leaf",
+                                                        "text": "$(p \\wedge q)$",
+                                                        "marks": [
+                                                            {
+                                                                "type": "latex"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "kind": "block",
+                                        "type": "choice",
+                                        "data": {
+                                            "correct": "true"
+                                        },
+                                        "nodes": [
+                                            {
+                                                "kind": "text",
+                                                "leaves": [
+                                                    {
+                                                        "kind": "leaf",
+                                                        "text": "Sacramento"
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "kind": "block",
+                                        "type": "choice",
+                                        "nodes": [
+                                            {
+                                                "kind": "block",
+                                                "type": "image",
+                                                "isVoid": true,
+                                                "data": {
+                                                    "src": "https://zytools.zybooks.com/zyAuthor/DiscreteMath/29/IMAGES/embedded_image_1_4637fcfc-49fe-4fdb-b603-ec8b7790d0f3_2vG5PA0OhhQP3S2WgfsV.png"
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "kind": "block",
+                                        "type": "choice",
+                                        "nodes": [
+                                            {
+                                                "kind": "block",
+                                                "type": "codeblock",
+                                                "nodes": [
+                                                    {
+                                                        "kind": "text",
+                                                        "leaves": [
+                                                            {
+                                                                "kind": "leaf",
+                                                                "text": "Post-order(v)\nCount = 0\nFor every child w of v:\n    Count = Count +1\nEnd-for\n\nFor every child w of v:\n    x := Post-order(w)\n    If "
+                                                            },
+                                                            {
+                                                                "kind": "leaf",
+                                                                "text": "$(x \\gt Count)$",
+                                                                "marks": [
+                                                                    {
+                                                                        "type": "latex"
+                                                                    }
+                                                                ]
+                                                            },
+                                                            {
+                                                                "kind": "leaf",
+                                                                "text": " Count := x\nEnd-for\n\nReturn( Count )"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

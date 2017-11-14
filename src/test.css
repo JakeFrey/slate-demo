@@ -1,0 +1,21 @@
+.question {
+    margin-top: 16px;
+}
+
+.choices {
+    margin-top: 12px;
+}
+
+.choice {
+    margin-top: 4px;
+}
+
+.codeblock-container {
+    display: flex;
+}
+
+.codeblock {
+    background-color: #b3d9fe;
+    margin-right: auto;
+    padding: 16px;
+}

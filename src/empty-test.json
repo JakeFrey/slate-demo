@@ -1,0 +1,73 @@
+{
+    "document": {
+        "nodes": [
+            {
+                "kind": "block",
+                "type": "test",
+                "nodes": [
+                    {
+                        "kind": "block",
+                        "type": "question",
+                        "nodes": [
+                            {
+                                "kind": "block",
+                                "type": "instructions",
+                                "nodes": [ ]
+                            },
+                            {
+                                "kind": "block",
+                                "type": "choices",
+                                "nodes": [
+                                    {
+                                        "kind": "block",
+                                        "type": "choice",
+                                        "nodes": [
+                                            {
+                                                "kind": "block",
+                                                "type": "label",
+                                                "nodes": [ ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "kind": "block",
+                                        "type": "choice",
+                                        "nodes": [
+                                            {
+                                                "kind": "block",
+                                                "type": "label",
+                                                "nodes": [ ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "kind": "block",
+                                        "type": "choice",
+                                        "nodes": [
+                                            {
+                                                "kind": "block",
+                                                "type": "label",
+                                                "nodes": [ ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "kind": "block",
+                                        "type": "choice",
+                                        "nodes": [
+                                            {
+                                                "kind": "block",
+                                                "type": "label",
+                                                "nodes": [ ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

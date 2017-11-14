@@ -1,0 +1,9 @@
+.toolbar {
+    display: flex;
+    width: calc(100% - 250px);
+    justify-content: space-between;
+}
+
+.toolbar > div {
+    display: flex;
+}

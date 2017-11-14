@@ -1,0 +1,21 @@
+{
+    "document": {
+        "nodes": [
+            {
+                "types": ["paragraph", "image", "choices"]
+            }
+        ]
+    },
+    "blocks": {
+        "paragraph": {
+            "nodes": [
+                {
+                    "kinds": ["text"]
+                }
+            ]
+        },
+        "image": {
+            "isVoid": "true"
+        }
+    }
+}

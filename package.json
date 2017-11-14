@@ -1,0 +1,25 @@
+{
+  "name": "slate-demo",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "pusher": "^1.5.0",
+    "react": "^16.0.0-rc.3",
+    "react-dom": "^16.0.0-rc.3",
+    "react-file-download": "^0.3.5",
+    "react-katex": "^1.2.0",
+    "react-latex": "^1.0.1",
+    "react-mathjax": "^0.1.1",
+    "react-scripts": "1.0.14",
+    "socket.io": "^2.0.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "pusher-js": "^4.2.1"
+  }
+}
