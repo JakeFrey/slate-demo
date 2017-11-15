@@ -3,13 +3,13 @@ import { findContainingQuestion, insertQuestion } from './utilities.js'
 import Immutable from 'immutable';
 
 export function onBackspace(event, change) {
-    const focusedNode = change.state.focusBlock
-    const { state } = change
+    const focusedNode = change.value.focusBlock
+    const { value } = change
 
     // Delete a question if it is all selected and backspace, or if backspace on instructions when there isn't any text on the question
     if (focusedNode.type === 'instructions') {
-        const parentQuestion = findContainingQuestion(focusedNode, change.state)
-        const test = change.state.document.nodes.get(0)
+        const parentQuestion = findContainingQuestion(focusedNode, change.value)
+        const test = change.value.document.nodes.get(0)
         
         if (!parentQuestion.text.length) {
             if (test.nodes.size > 1) {
@@ -22,7 +22,7 @@ export function onBackspace(event, change) {
 
     // Delete choice if there isn't any choice text and there is more than one choice
     else if (focusedNode.type === 'choice') {
-        const parentQuestion = findContainingQuestion(focusedNode, change.state)
+        const parentQuestion = findContainingQuestion(focusedNode, change.value)
         
         if (!focusedNode.text.length || focusedNode.text === '*') {
             if (parentQuestion.nodes.get(1).nodes.size > 1) {
@@ -35,8 +35,8 @@ export function onBackspace(event, change) {
 
     // Don't do anything in tables if at the start of a cell
     else if (focusedNode.type === 'table-cell') {
-        const { state } = change
-        const { document, selection } = state
+        const { value } = change
+        const { document, selection } = value
         const { startKey } = selection
         const startNode = document.getDescendant(startKey)
 
@@ -45,7 +45,7 @@ export function onBackspace(event, change) {
             if (previous) {
                 const prevBlock = document.getClosestBlock(previous.key)
 
-                if (state.startOffset != 0) return
+                if (value.startOffset != 0) return
                 event.preventDefault()
                 return true
             }
@@ -68,11 +68,11 @@ export function onBackspace(event, change) {
    
 */
 export function onDelete(event, change) {
-    const focusedNode = change.state.focusBlock
+    const focusedNode = change.value.focusBlock
 
     if (focusedNode.type === 'table-cell') {
-        const { state } = change
-        if (state.endOffset != state.startText.text.length) return
+        const { value } = change
+        if (value.endOffset != value.startText.text.length) return
         event.preventDefault()
         return true
     }
@@ -82,7 +82,7 @@ export function onDelete(event, change) {
    On return, do nothing if inside a table cell. If in something like instructions, a codeblock, or a choice, add another paragraph
 */
 export function onEnter(event, change) {
-    const focusedNode = change.state.focusBlock
+    const focusedNode = change.value.focusBlock
 
     if (focusedNode.type === 'table-cell') {
         event.preventDefault()
@@ -105,7 +105,7 @@ export function onEnter(event, change) {
    
 */
 export function onShiftEnter(event, change) {
-    const focusedNode = change.state.focusBlock
+    const focusedNode = change.value.focusBlock
     let siblingNodeType = focusedNode.type
 
     if (focusedNode.type === 'table-cell') {
@@ -131,11 +131,11 @@ export function onShiftEnter(event, change) {
 }
 
 export function onCtrlEnter(event, change) {
-    const focusedNode = change.state.focusBlock
+    const focusedNode = change.value.focusBlock
     let parentQuestion = null
 
     if (focusedNode) {
-        parentQuestion = findContainingQuestion(focusedNode, change.state)
+        parentQuestion = findContainingQuestion(focusedNode, change.value)
         insertQuestion(change, parentQuestion)
     }
 
@@ -144,13 +144,13 @@ export function onCtrlEnter(event, change) {
 }
 
 export function onShiftBackspace(event, change) {
-    const focusedNode = change.state.focusBlock
-    const test = change.state.document.nodes.get(0)
+    const focusedNode = change.value.focusBlock
+    const test = change.value.document.nodes.get(0)
     let parentQuestion = null
     let parentChoice = null
 
     if (focusedNode) {
-        parentQuestion = findContainingQuestion(focusedNode, change.state)
+        parentQuestion = findContainingQuestion(focusedNode, change.value)
 
         parentQuestion.nodes.get(1).nodes.forEach(choice => {
             if (choice.key === focusedNode.key) {
@@ -175,12 +175,12 @@ export function onShiftBackspace(event, change) {
 }
 
 export function onCtrlBackspace(event, change) {
-    const focusedNode = change.state.focusBlock
-    const test = change.state.document.nodes.get(0)
+    const focusedNode = change.value.focusBlock
+    const test = change.value.document.nodes.get(0)
     let parentQuestion = null
 
     if (focusedNode) {
-        parentQuestion = findContainingQuestion(focusedNode, change.state)
+        parentQuestion = findContainingQuestion(focusedNode, change.value)
 
         if (test.nodes.size > 1) {
             change.removeNodeByKey(parentQuestion.key)
@@ -196,16 +196,16 @@ export function onCtrlR(event, change) {
     const newText = window.prompt('Enter the new text:')
     if (!origText) return
 
-    const state = change.state
-    const isFragment = !state.fragment.isEmpty
+    const value = change.value
+    const isFragment = !value.fragment.isEmpty
     debugger;
 
     // Find each node that has that text
-    state.document.getBlocks().forEach(block => {
+    value.document.getBlocks().forEach(block => {
         block.nodes.forEach(node => {
             if ((node.text.indexOf(origText) != -1 && node.kind === 'text') &&
-                (!isFragment || (parseInt(node.key) >= parseInt(state.selection.anchorKey) &&
-                                 parseInt(node.key) <= parseInt(state.selection.endKey)))) {
+                (!isFragment || (parseInt(node.key) >= parseInt(value.selection.anchorKey) &&
+                                 parseInt(node.key) <= parseInt(value.selection.endKey)))) {
                 change.removeTextByKey(node.key, node.text.indexOf(origText), origText.length)
                 change.insertTextByKey(node.key, node.text.indexOf(origText), newText)
             }
@@ -219,13 +219,13 @@ export function onCtrlR(event, change) {
 export function onCtrlI(event, change) {
     event.preventDefault()
 
-    const state = change.state
-    const selectionFrag = state.fragment
+    const value = change.value
+    const selectionFrag = value.fragment
     if (selectionFrag.isEmpty) return
 
-    const imageTextKey = state.focusBlock.key
+    const imageTextKey = value.focusBlock.key
     const url = selectionFrag.text
-    const imageTextNode = state.document.getNode(imageTextKey)
+    const imageTextNode = value.document.getNode(imageTextKey)
 
     const newData = imageTextNode.data.set('src', url)
     const emptyNodes = Immutable.List([Text.create({ "text": " "})])

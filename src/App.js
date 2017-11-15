@@ -2,11 +2,10 @@ import React from 'react'
 import './App.css';
 import './toolbar.css';
 import './test.css';
-import Plain from 'slate-plain-serializer'
 import Pusher from 'pusher-js'
 
 import { Editor, getEventRange, getEventTransfer } from 'slate-react'
-import { Value, State, Slate, Block, Text, Range, Data } from 'slate'
+import { Value, Block, Text, Range } from 'slate'
 import { isKeyHotkey } from 'is-hotkey'
 import Menu from './menu.js';
 import LatexMenu from './latex-menu.js';
@@ -40,9 +39,9 @@ function insertQuestion(change, insertAtStart) {
     const block = Block.create({ type: "question" }).update('nodes', nodes => nodes.push(instructions)).update('nodes', nodes => nodes.push(choices))
 
     // Num questions
-    const questions = change.state.document.nodes.get(0).nodes
+    const questions = change.value.document.nodes.get(0).nodes
     const noQuestions = questions.size == 1 && questions.get(0).kind == 'text'
-    const insertionIndex = insertAtStart || noQuestions ? 0 : change.state.document.nodes.get(0).nodes.size;
+    const insertionIndex = insertAtStart || noQuestions ? 0 : change.value.document.nodes.get(0).nodes.size;
 
     change.insertNodeByKey("2", insertionIndex, block)
 }
@@ -70,7 +69,7 @@ class App extends React.Component {
      * @type {Object}
      */
     state = {
-        state: State.fromJSON(initialTest),
+        value: Value.fromJSON(initialTest),
         showContent: true,
         stateID: Math.random()
     }
@@ -83,8 +82,8 @@ class App extends React.Component {
      */
 
     hasMark = (type) => {
-        const { state } = this.state
-        return state.activeMarks.some(mark => mark.type == type)
+        const { value } = this.state
+        return value.activeMarks.some(mark => mark.type == type)
     }
 
     /**
@@ -95,8 +94,8 @@ class App extends React.Component {
      */
 
     hasBlock = (type) => {
-        const { state } = this.state
-        return state.blocks.some(node => node.type == type)
+        const { value } = this.state
+        return value.blocks.some(node => node.type == type)
     }
 
     /**
@@ -115,10 +114,10 @@ class App extends React.Component {
         this.updateMenu()
         this.updateLatexMenu()
         this.getState.bind('new_message', message => {
-            const messageState = State.fromJSON(message.json)
+            const messageState = Value.fromJSON(message.json)
 
             if (message.update && this.state.stateID !== message.stateID) {
-                this.setState({state: State.fromJSON(message.json), mostRecentChange: message.time, update: false})
+                this.setState({value: Value.fromJSON(message.json), mostRecentChange: message.time, update: false})
             }
         }, this);
    }
@@ -133,11 +132,11 @@ class App extends React.Component {
      */
 
     updateMenu = () => {
-        const { state } = this.state
+        const { value } = this.state
         const menu = this.menu
         if (!menu) return
 
-        if (state.focusBlock && state.focusBlock.type == 'image') {
+        if (value.focusBlock && value.focusBlock.type == 'image') {
             const selection = window.getSelection()
             const range = selection.getRangeAt(0)
             const rect = range.getBoundingClientRect()
@@ -145,23 +144,23 @@ class App extends React.Component {
             menu.style.top = `${rect.top + window.scrollY - menu.offsetHeight}px`
             menu.style.left = `${rect.left + window.scrollX - menu.offsetWidth / 8 + rect.width / 2}px`
         }
-        else if (state.isBlurred || state.isEmpty) {
+        else if (value.isBlurred || value.isEmpty) {
             menu.removeAttribute('style')
             return
         }
     }
 
     updateLatexMenu = () => {
-        const { state } = this.state
+        const { value } = this.state
         const menu = this.latexMenu
         if (!menu) return
 
         // Get the selected text
-        const selectedKey = state.selection.anchorKey
-        const selectedIndex = state.selection.focusOffset
+        const selectedKey = value.selection.anchorKey
+        const selectedIndex = value.selection.focusOffset
 
         if (selectedKey) {
-            const selectedNode = state.document.getNode(selectedKey)
+            const selectedNode = value.document.getNode(selectedKey)
             let totalNumChars = 0
             let selectedLeaf = null
 
@@ -183,7 +182,7 @@ class App extends React.Component {
                     menu.style.top = `${rect.top + window.scrollY - menu.offsetHeight}px`
                     menu.style.left = `${rect.left + window.scrollX - menu.offsetWidth / 8 + rect.width / 2}px`
                 }
-                else if (state.isBlurred || state.isEmpty) {
+                else if (value.isBlurred || value.isEmpty) {
                     menu.removeAttribute('style')
                     return
                 }
@@ -211,18 +210,18 @@ class App extends React.Component {
      * @param {Change} change
      */
     
-    onChange = ({ state }) => {
-        this.setState({ state, json: JSON.stringify(state.toJSON()), plainText: state.document.nodes.get(0).text })
+    onChange = ({ value }) => {
+        this.setState({ value, json: JSON.stringify(value.toJSON()), plainText: value.document.nodes.get(0).text })
         this.renderToolbar()
 
-        if (JSON.stringify(state.document) !== JSON.stringify(this.state.state.document)) {
-            axios.post('http://localhost:5000/messages', {
-                text: state.toJSON(),
-                time: new Date(),
-                update: this.state.state.document.text !== state.document.text,
-                stateID: this.state.stateID
-            })
-        }
+        // if (JSON.stringify(value.document) !== JSON.stringify(this.state.value.document)) {
+        //     axios.post('http://localhost:5000/messages', {
+        //         text: value.toJSON(),
+        //         time: new Date(),
+        //         update: this.state.value.document.text !== value.document.text,
+        //         stateID: this.state.stateID
+        //     })
+        // }
     }
 
     /**
@@ -292,8 +291,8 @@ class App extends React.Component {
      */
 
     onClickMark = (type) => {
-        const { state } = this.state
-        const change = state.change().toggleMark(type)
+        const { value } = this.state
+        const change = value.change().toggleMark(type)
         this.onChange(change)
     }
 
@@ -305,9 +304,9 @@ class App extends React.Component {
      */
 
     onClickBlock = (type) => {
-        const { state } = this.state
-        const change = state.change()
-        const { document } = state
+        const { value } = this.state
+        const change = value.change()
+        const { document } = value
 
         const isActive = this.hasBlock(type)
 
@@ -323,10 +322,10 @@ class App extends React.Component {
             const row2 = Block.create({ type: "table-row" }).update('nodes', nodes => nodes.push(cell3)).update('nodes', nodes => nodes.push(cell4))
             const table = Block.create({ type: 'table' }).update('nodes', nodes => nodes.push(row1)).update('nodes', nodes => nodes.push(row2))
 
-            change.insertNodeByKey(state.focusBlock.key, state.focusBlock.nodes.size - 1, table)
+            change.insertBlock(table)
         }
         else {
-            change.insertNodeByKey(state.focusBlock.key, state.focusBlock.nodes.size - 1, Block.create({ type: type }))
+            change.insertBlock(Block.create({ type: type }))
         }
 
         this.onChange(change)
@@ -341,13 +340,13 @@ class App extends React.Component {
                 <div className='slate-app'>
                 <Menu
                     menuRef={this.menuRef}
-                    value={this.state.state}
+                    value={this.state.value}
                     onChange={this.onChange}
                     textToImage={this.textToImage}
                 />
                 <LatexMenu
                     menuRef={this.latexMenuRef}
-                    value={this.state.state}
+                    value={this.state.value}
                     onChange={this.onChange}
                     textToLatex={this.textToLatex}
                 />
@@ -420,20 +419,20 @@ class App extends React.Component {
         let showQuestionButtons = false
         let showChoiceButtons = false
 
-        const state = this.state.state
+        const value = this.state.value
 
-        if (state.selection.focusKey) {
-            const selectedNode = state.document.getNode(state.selection.focusKey)
-            const questions = state.document.nodes.get(0).nodes
+        if (value.selection.focusKey) {
+            const selectedNode = value.document.getNode(value.selection.focusKey)
+            const questions = value.document.nodes.get(0).nodes
             questions.forEach(question => {
                 if (question.hasDescendant) {
-                    if (question.hasDescendant(state.selection.focusKey)) {
+                    if (question.hasDescendant(value.selection.focusKey)) {
                         showQuestionButtons = true
                     }
 
                     if (question.nodes.get(1)) { 
                         question.nodes.get(1).nodes.forEach(choice => {
-                            if (choice.hasDescendant && choice.hasDescendant(state.selection.focusKey)) {
+                            if (choice.hasDescendant && choice.hasDescendant(value.selection.focusKey)) {
                                 showChoiceButtons = true
                             }
                         })
@@ -499,10 +498,10 @@ class App extends React.Component {
         return (
             <div className="editor">
                 <Editor
-                    state={this.state.state}
                     onChange={this.onChange}
                     onKeyDown={this.onKeyDown}
                     renderNode={this.renderNode}
+                    value={this.state.value}
                     renderMark={this.renderMark}/>
             </div>
         )
@@ -568,12 +567,12 @@ class App extends React.Component {
     imageClicked = (event) => {
         event.preventDefault()
 
-        const state = this.state.state
-        const change = state.change()
+        const value = this.state.value
+        const change = value.change()
 
         // Get key for the image selected
         const imageKey = event.target.getAttribute("data-key")
-        const imageNode = state.document.getNode(imageKey)
+        const imageNode = value.document.getNode(imageKey)
         const srcNodes = Immutable.List([Text.create({ "text": imageNode.data.get('src')})])
         const updatedImageNode = imageNode.set("type", "plainTextImage").set("isVoid", false)
               .set('nodes', srcNodes)
@@ -586,12 +585,12 @@ class App extends React.Component {
     textToImage = (event) => {
         event.preventDefault()
 
-        const state = this.state.state
-        const change = state.change()
+        const value = this.state.value
+        const change = value.change()
 
         // Get key for the image selected
-        const imageKey = state.focusBlock.key
-        const imageTextNode = state.document.getNode(imageKey)
+        const imageKey = value.focusBlock.key
+        const imageTextNode = value.document.getNode(imageKey)
         const newData = imageTextNode.data.set('src', imageTextNode.text)
         const emptyNodes = Immutable.List([Text.create({ "text": " "})])
         const updatedImageNode = imageTextNode.set("type", "image").set("isVoid", true)
@@ -624,13 +623,13 @@ class App extends React.Component {
             }
         }
 
-        const state = this.state.state
-        const change = state.change()
+        const value = this.state.value
+        const change = value.change()
 
         const latexOffsetKey = currentElement.parentElement.getAttribute("data-offset-key")
         const latexKey = latexOffsetKey.substring(0, latexOffsetKey.indexOf(":"))
         const latexOffset = latexOffsetKey.substring(latexOffsetKey.indexOf(":") + 1)
-        const parentNode = state.document.getNode(latexKey)
+        const parentNode = value.document.getNode(latexKey)
         const latexLeaf = parentNode.getLeaves().get(parseInt(latexOffset, 10))
 
         // The index of the latex text within the parent text node
@@ -650,13 +649,13 @@ class App extends React.Component {
     textToLatex = (event) => {
         event.preventDefault()
 
-        const state = this.state.state
-        const change = state.change()
+        const value = this.state.value
+        const change = value.change()
 
         // Get the selected text
-        const selectedKey = state.selection.anchorKey
-        const selectedIndex = state.selection.focusOffset
-        const selectedNode = state.document.getNode(selectedKey)
+        const selectedKey = value.selection.anchorKey
+        const selectedIndex = value.selection.focusOffset
+        const selectedNode = value.document.getNode(selectedKey)
         let totalNumChars = 0
         let selectedLeaf = null
 
@@ -693,15 +692,15 @@ class App extends React.Component {
         const src = window.prompt('Enter the URL of the image:')
         if (!src) return
 
-        const change = this.state.state.change()
+        const change = this.state.value.change()
         const block = Block.create({ type: "image", isVoid: true, data: { src } })
-        change.insertBlockAtRange(change.state.selection, block)
+        change.insertBlockAtRange(change.value.selection, block)
         this.onChange(change)
     }
 
     exportToWord = () => {
         axios.post(`http://localhost:5000/create_test_bank`, {
-                   questions: this.state.state.toJSON(),
+                   questions: this.state.value.toJSON(),
                    
                   }).then(response => {
                       var link=document.createElement('a');

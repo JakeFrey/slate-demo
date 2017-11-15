@@ -3,10 +3,10 @@ import { Value, State, Slate, Block, Text, Range, Data } from 'slate'
 /**
    Returns the question that contains the given node.
 */
-export function findContainingQuestion(node, state) {
+export function findContainingQuestion(node, value) {
     let containingQuestion = null
 
-    state.document.nodes.get(0).nodes.forEach(question => {
+    value.document.nodes.get(0).nodes.forEach(question => {
         question.getBlocks().forEach(block => {
             if (block.key == node.key) {
                 containingQuestion = question
@@ -31,7 +31,7 @@ export function insertQuestion(change, focusQuestion) {
           update('nodes', nodes => nodes.push(choice3)).update('nodes', nodes => nodes.push(choice4))
     const block = Block.create({ type: "question" }).update('nodes', nodes => nodes.push(instructions)).update('nodes', nodes => nodes.push(choices))
 
-    const questions = change.state.document.nodes.get(0).nodes
+    const questions = change.value.document.nodes.get(0).nodes
     let insertionIndex = 0
 
     questions.forEach((question, index) => {
