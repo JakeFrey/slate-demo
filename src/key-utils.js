@@ -5,7 +5,6 @@ import Immutable from 'immutable';
 export function onBackspace(event, change) {
     const focusedNode = change.state.focusBlock
     const { state } = change
-    debugger;
 
     // Delete a question if it is all selected and backspace, or if backspace on instructions when there isn't any text on the question
     if (focusedNode.type === 'instructions') {
@@ -69,10 +68,14 @@ export function onBackspace(event, change) {
    
 */
 export function onDelete(event, change) {
-    const { state } = change
-    if (state.endOffset != state.startText.text.length) return
-    event.preventDefault()
-    return true
+    const focusedNode = change.state.focusBlock
+
+    if (focusedNode.type === 'table-cell') {
+        const { state } = change
+        if (state.endOffset != state.startText.text.length) return
+        event.preventDefault()
+        return true
+    }
 }
 
 /**
@@ -81,7 +84,7 @@ export function onDelete(event, change) {
 export function onEnter(event, change) {
     const focusedNode = change.state.focusBlock
 
-    if () {
+    if (focusedNode.type === 'table-cell') {
         event.preventDefault()
         return true
     }
@@ -105,14 +108,26 @@ export function onShiftEnter(event, change) {
     const focusedNode = change.state.focusBlock
     let siblingNodeType = focusedNode.type
 
-    if (focusedNode.type == 'codeblock') {
-        siblingNodeType = 'paragraph'
+    if (focusedNode.type === 'table-cell') {
+        if (focusedNode.type == 'codeblock') {
+            siblingNodeType = 'paragraph'
+        }
+
+        change.insertBlock(Block.create({ type: siblingNodeType }))
+
+        event.preventDefault()
+        return true
     }
+    else {
+        if (focusedNode.type == 'codeblock') {
+            siblingNodeType = 'paragraph'
+        }
 
-    change.insertBlock(Block.create({ type: siblingNodeType }))
+        change.insertBlock(Block.create({ type: siblingNodeType }))
 
-    event.preventDefault()
-    return true
+        event.preventDefault()
+        return true
+    }
 }
 
 export function onCtrlEnter(event, change) {
