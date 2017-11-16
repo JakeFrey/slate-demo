@@ -91,10 +91,7 @@ export function onEnter(event, change) {
 
     // Codeblocks and choices
     if (focusedNode.type == 'codeblock' || focusedNode.type == 'choice' || 'instructions') {
-
-        // TODO Look into enhancing this into a real paragraph
-        change.insertText('\n')
-
+        change.insertBlockAtRange(change.value.selection, 'paragraph')
     }
 
     event.preventDefault()
